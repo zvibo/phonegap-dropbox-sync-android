@@ -17,16 +17,17 @@ Use the [Dropbox Apps Console](https://www.dropbox.com/login?cont=https%3A//www.
 Add these 3 JavaScript functions to your app that handle native callbacks:
 ```
 function dropbox_linked() { }
-// called from the onActivityResult method in the plugin when linking is successful.
+// Called from the onActivityResult method in the plugin when linking is successful.
 ```
 ```
 function dropbox_onSyncStatusChange(status) { }
-// called by observer in the plugin when there's a change to the status of background synchronization (download/upload).
+// Called by observer in the plugin when there's a change 
+// to the status of background synchronization (download/upload).
 // status is a string variable that will be 'sync' or 'none'.
 ```
 ```
 function dropbox_fileChange() { }
-// called by observer in the plugin when a file is changed.
+// Called by observer in the plugin when a file is changed.
 ```
 
 [You can see how these native callbacks are used in the sample app provided](https://github.com/rossmartin/phonegap-dropbox-sync-android/blob/master/sample/www/js/app.js#l219).
