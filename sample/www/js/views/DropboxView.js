@@ -14,11 +14,11 @@ function DropboxView(template, listTemplate) {
             if (me.isTapHolding) return false;
             var filePath = decodeURIComponent($(event.currentTarget).attr('href').substr(1));
             app.showLoader();
-            DropboxSync.openFile(filePath).done(function() {
+            DropboxSync.openFile(filePath, function() {
                 app.hideLoader();
-            }).fail(function() {
+            }, function() {
                 app.hideLoader();
-                console.log('DropboxSync.openFile failed');
+                console.log('DropboxSync.openFile fail');
             });
             event.preventDefault();
         });
@@ -37,10 +37,10 @@ function DropboxView(template, listTemplate) {
                         // todo
                         break;
                     case 'btn-deleteFile':
-                        DropboxSync.deleteFile(dropboxFilePath).done(function(result) {
+                        DropboxSync.deleteFile(dropboxFilePath, function(result) {
                             me.listFolder();
-                        }).fail(function() {
-                            console.log('DropboxSync.deleteFile failed');
+                        }, function() {
+                            console.log('DropboxSync.deleteFile fail');
                         });
                         break;
                 }
@@ -52,8 +52,8 @@ function DropboxView(template, listTemplate) {
         });
         
         this.el.on('click', '#btn-back', function(event) {
-            (app.dropboxPath == '/') ? app.showExitModal() : window.history.back();
             event.preventDefault();
+            (app.dropboxPath == '/') ? navigator.app.exitApp() : window.history.back();
         });
         
         $('#effeckt-off-screen-nav').off(); // unbind previous events from any other view first
@@ -73,10 +73,10 @@ function DropboxView(template, listTemplate) {
                         var folderName = results.input1.trim(),
                             dropboxFilePath = (app.dropboxPath == '/') ? '/' + folderName : app.dropboxPath + '/' + folderName;
                         if (dropboxFilePath == '/') return false; // user tapped OK but didn't type a folder name
-                        DropboxSync.createFolder(dropboxFilePath).done(function(result) {
+                        DropboxSync.createFolder(dropboxFilePath, function() {
                             me.listFolder();
-                        }).fail(function() {
-                            console.log('DropboxSync.createFolder failed');
+                        }, function() {
+                            console.log('DropboxSync.createFolder fail');
                         });
                     }
                 }, 'New Folder', ['Ok', 'Cancel'], '');
@@ -125,7 +125,7 @@ DropboxView.prototype.listFolder = function() {
         folderArray = [],
         fileList = [],
         me = this;
-    DropboxSync.listFolder(app.dropboxPath).done(function(files) {
+    DropboxSync.listFolder(app.dropboxPath, function(files) {
         for (i = 0; i < files.length; i++) {
             file = files[i];
             file.fileName = files[i].path.substr(file.path.lastIndexOf("/") + 1);
@@ -170,6 +170,8 @@ DropboxView.prototype.listFolder = function() {
                 app.dropboxViewIScroll.scrollTo(0, app.dropboxViewScrollCache[checkIndex].pos);
             }
         }, 50);
+    }, function(error) {
+        console.log('DropboxSync.listFolder error');
     });
 };
 

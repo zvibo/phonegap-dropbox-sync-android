@@ -190,6 +190,8 @@ public class DropboxSync extends CordovaPlugin {
                             }
                         }
                     });
+                    
+                    callbackContext.success();
                 } catch (Unauthorized e) {
                     e.printStackTrace();
                     callbackContext.error(e.getMessage());

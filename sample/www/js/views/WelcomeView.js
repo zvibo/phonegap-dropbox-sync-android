@@ -10,8 +10,8 @@ function WelcomeView(template) {
         });
         
         this.el.on('click', '#btn-back', function(event) {
-            app.showExitModal();
             event.preventDefault();
+            navigator.app.exitApp();
         });
          
     };

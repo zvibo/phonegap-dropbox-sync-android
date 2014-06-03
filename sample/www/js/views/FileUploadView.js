@@ -39,10 +39,10 @@ function FileUploadView(template, listTemplate) {
                         DropboxSync.uploadFile({
                             filePath: fullPath, 
                             dropboxPath: app.dropboxPath
-                        }).done(function(result) {
-                            // nothing to do, add here if needed
-                        }).fail(function (err) {
-                            console.log('DropboxSync.uploadFile fail, err -> ' + err);
+                        }, function() {
+                            console.log('DropboxSync.uploadFile success');
+                        }, function (error) {
+                            console.log('DropboxSync.uploadFile fail');
                         });
                         break;
                     case 'btn-uploadFolderRecursive':
@@ -50,9 +50,9 @@ function FileUploadView(template, listTemplate) {
                             folderPath: fullPath, 
                             dropboxPath: app.dropboxPath, 
                             doRecursive: true
-                        }).done(function(result) {
-                            // nothing to do, add here if needed
-                        }).fail(function (err) {
+                        }, function() {
+                            console.log('DropboxSync.uploadFolder success (recursive)');
+                        }, function (error) {
                             console.log('DropboxSync.uploadFolder fail');
                         });
                         break;
@@ -60,9 +60,9 @@ function FileUploadView(template, listTemplate) {
                         DropboxSync.uploadFolder({
                             folderPath: fullPath, 
                             dropboxPath: app.dropboxPath
-                        }).done(function(result) {
-                            // nothing to do, add here if needed
-                        }).fail(function (err) {
+                        }, function() {
+                            console.log('DropboxSync.uploadFolder success');
+                        }, function (error) {
                             console.log('DropboxSync.uploadFolder fail');
                         });
                         break;

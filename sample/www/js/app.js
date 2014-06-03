@@ -26,7 +26,7 @@ var app = (function() {
         slider.slidePageFrom(dropboxView.render().el, (fromFileUploadView) ? 'left' : 'right');
         
         dropboxView.listFolder();
-        DropboxSync.addObserver("/");
+        DropboxSync.addObserver('/');
     }
     
     function showFileUploadView() {
@@ -48,19 +48,6 @@ var app = (function() {
     
     function createModal(obj) {
         modalViewListContainer.empty().html(topcoatListTpl(obj));
-    }
-
-    function showExitModal() {
-        createModal({
-            header: 'Exit PhoneGap Sync?',
-            listItem:  [
-                            {
-                                text: 'Exit',
-                                id: 'btn-exitApp'
-                            }
-                       ]
-        });
-        showModal();
     }
     
     function showUnlinkModal() {
@@ -119,19 +106,16 @@ var app = (function() {
     function hideLoader() {
         loadIcon.hide();
     }
-
-    modalViewListContainer.on('click', '#btn-exitApp', function(event) {
-        event.preventDefault();
-        navigator.app.exitApp();
-    });
     
     modalViewListContainer.on('click', '#btn-unlinkDropbox', function(event) {
         hideModal();
         toggleNav().done(function() {
             showLoader();
-            DropboxSync.unlink().done(function() {
+            DropboxSync.unlink(function() {
                 hideLoader();
                 showWelcomeView();
+            }, function(error) {
+                console.log('DropboxSync unlink error');
             });
         });
         event.preventDefault();
@@ -160,7 +144,7 @@ var app = (function() {
             };
         }
         
-        DropboxSync.checkLink().done(showDropboxView).fail(showWelcomeView);
+        DropboxSync.checkLink(showDropboxView, showWelcomeView);
         
         // hook btn-back to the device's back button
         document.addEventListener('backbutton', onBackKeyDown, false);
@@ -216,7 +200,6 @@ var app = (function() {
         fileUploadViewScrollCache: [],
         dropboxViewIScroll: null,
         fileUploadViewIScroll: null,
-        showExitModal: showExitModal,
         showUnlinkModal: showUnlinkModal,
         createModal: createModal,
         createNavMenu: createNavMenu,

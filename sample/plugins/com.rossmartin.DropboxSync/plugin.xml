@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android"
     id="com.rossmartin.DropboxSync"
-    version="1.0.0">
+    version="1.0.1">
     
     <name>Dropbox Sync</name>
     <author>Ross Martin</author>
@@ -57,6 +57,5 @@
         Work with files on Dropbox through a familiar, file system-like interface. 
         The Sync API takes care of syncing and notifying you of remote changes so your app can respond instantly. 
         It also handles caching, network flakiness, and offline logic so you don't have to.
-        This PhoneGap plugin requires jQuery 1.5+ for the Deferred object.
     </info>
 </plugin>

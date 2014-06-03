@@ -22,113 +22,153 @@ function dropbox_linked() { }
 ```
 function dropbox_onSyncStatusChange(status) { }
 // called by observer in the plugin when there's a change to the status of background synchronization (download/upload).
-// status is a string variable that will be "sync" or "none".
+// status is a string variable that will be 'sync' or 'none'.
 ```
 ```
 function dropbox_fileChange() { }
 // called by observer in the plugin when a file is changed.
 ```
 
-[You can see how these native callbacks are used in the sample app provided](https://github.com/rossmartin/phonegap-dropbox-sync-android/blob/master/sample/www/js/app.js#l236).
+[You can see how these native callbacks are used in the sample app provided](https://github.com/rossmartin/phonegap-dropbox-sync-android/blob/master/sample/www/js/app.js#l219).
 Usage
 -----------
 Link to Dropbox:
-
 ```
 DropboxSync.link();
 ```
 
+Check Dropbox Authentication (persistent):
+```
+DropboxSync.checkLink(function() { // success
+    // User is already authenticated with Dropbox.
+}, function() { // fail
+    // User is not authenticated with Dropbox.
+});
+// Authentication status will persist between runs of your app.
+```
+
+Add an observer (invokes a callback when Dropbox files/folders change):
+```
+var dropboxPath = '/';
+
+DropboxSync.addObserver(dropboxPath);
+// When an observer is added to a path, JavaScript callbacks
+// 'dropbox_fileChange' and 'dropbox_onSyncStatusChange'
+// will get invoked when a file/folder is changed or when
+// a background synchronization (download/upload) occurs.
+// The observer watches changes in child directories also.
+```
+
 List a Dropbox folder:
 ```
-var dropboxFolderPath = "/"; // root app dir in this case
+var dropboxFolderPath = '/'; // root app dir in this case
 
-DropboxSync.listFolder(dropboxFolderPath).done(function(files) {
-    // each object in files have properties: path, modifiedTime, size, and isFolder.
+DropboxSync.listFolder(dropboxFolderPath, function(files) { // success
+    // Each object in files have properties: path, modifiedTime, size, and isFolder.
+}, function() { // fail
+    // Handle error in fail callback.
 });
 ```
 
 Upload a file to Dropbox:
 ```
 DropboxSync.uploadFile({
-    filePath: "file:///storage/sdcard0/DCIM/Camera/SomeVideo.mp4", // required, local URI
-    dropboxPath: "/someFolder" // optional, defaults to root ('/')
-}).done(function() {
+    filePath: 'file:///storage/sdcard0/DCIM/Camera/SomeVideo.mp4', // required, local URI
+    dropboxPath: '/someFolder' // optional, defaults to root ('/')
+}, function() { // success
     // dropboxPath is the Dropbox folder you want to upload the file into.
+}, function() { // fail
+    // Handle error in fail callback.
 });
 ```
 
 Upload a folder to Dropbox:
 ```
 DropboxSync.uploadFolder({
-    folderPath: "file:///storage/sdcard0", // required
-    dropboxPath: "/someFolder", // optional, defaults to root ('/')
+    folderPath: 'file:///storage/sdcard0', // required
+    dropboxPath: '/someFolder', // optional, defaults to root ('/')
     doRecursive: true // optional, defaults to false
-}).done(function() {
+}, function() { // success
     // dropboxFolderPath is the Dropbox folder you want to upload the files/folders into.
     // The folder upload can be done recursively by setting doRecursive to true.
+}, function() { // fail
+    // Handle error in fail callback.
 });
 ```
 
 Open a Dropbox file:
 ```
-var filePath = "/foo/bar.jpg";
+var filePath = '/foo/bar.jpg';
 
-DropboxSync.openFile(filePath).done(function() {
+DropboxSync.openFile(filePath, function() { // success
     // Android device will either open the file with the proper external application
     // installed on your device or ask you which application to use.
+}, function() { // fail
+    // Handle error in fail callback.
 });
 ```
 
 Create a new folder in Dropbox:
 ```
-var folderPath = "/foo/bar";
+var folderPath = '/foo/bar';
 
-DropboxSync.createFolder(folderPath).done(function() {
+DropboxSync.createFolder(folderPath, function() { // success
     // Creates a new folder, including parent folders if necessary.
+}, function() { // fail
+    // Handle error in fail callback.
 });
 ```
 
 Delete a file/folder in Dropbox:
 ```
-var filePath = "/foo/bar.json";
+var filePath = '/foo/bar.json';
 
-DropboxSync.deleteFile(filePath).done(function() {
+DropboxSync.deleteFile(filePath, function() { // success
     // Deletes a file, or recursively deletes a folder.
+}, function() { // fail
+    // Handle error in fail callback.
 });
 ```
 
 Read a file in Dropbox:
 ```
-var filePath = "/foo/bar.json";
+var filePath = '/foo/bar.json';
 
-DropboxSync.readString(filePath).done(function(result) {
+DropboxSync.readString(filePath, function(result) { // success
     // Reads the contents of a file (result is a string).
+}, function() { // fail
+    // Handle error in fail callback.
 });
 ```
 
 Get the Base64 decoded string from an image in Dropbox
 (use an image from Dropbox in your app):
 ```
-var filePath = "/foobar.jpg";
+var filePath = '/foobar.jpg';
 
-DropboxSync.getImageBase64String(filePath).done(function(result) {
-    $('#image').attr('src', "data:image/jpeg;base64," + result);
+DropboxSync.getImageBase64String(filePath, function(result) { // success
+    $('#image').attr('src', 'data:image/jpeg;base64,' + result);
     // result is the Base64-encoded string.
+}, function() { // fail
+    // Handle error in fail callback.
 });
 ```
 
 Unlink from Dropbox:
-
 ```
-DropboxSync.unlink().done(function() {
-    // do something here after deferred resolved
+DropboxSync.unlink(function() { // success
+    // Do something here after unlinked.
+}, function() { // fail
+    // Handle error in fail callback.
 });
 ```
 
-__Note: This plugin requires jQuery 1.5+ for the Deferred Object.__
-
 Updates
 -----------
+***```6-3-14```***<br>**- Removed the jQuery dependency in plugin and updated the docs.**<br>
+
+***```5-22-14```***<br>**- Made plugin installable via CLI and Plugman.**<br>
+
 ***```3-8-14```***<br>**- Removed use of the "getImageBase64String" & "readString" methods in the sample app.  Now Android device will either open the file with proper external application installed on your device or ask you which application to use.**<br>
 
 ***```3-4-14```***<br>**- Added ability to delete files/folders and create new folders in the Dropbox plugin.**<br>
