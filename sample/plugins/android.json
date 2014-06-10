@@ -17,6 +17,12 @@
             },
             "AndroidManifest.xml": {
                 "parents": {
+                    "/manifest": [
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
+                            "count": 1
+                        }
+                    ],
                     "/manifest/application": [
                         {
                             "xml": "<activity android:name=\"com.dropbox.sync.android.DbxAuthActivity\" />",
@@ -34,12 +40,6 @@
                     "/*": [
                         {
                             "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
-                            "count": 1
-                        }
-                    ],
-                    "/manifest": [
-                        {
-                            "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
                             "count": 1
                         }
                     ]
@@ -66,6 +66,9 @@
         }
     },
     "installed_plugins": {
+        "com.rossmartin.DropboxSync": {
+            "PACKAGE_NAME": "com.rossmartin.dropbox"
+        },
         "org.apache.cordova.device": {
             "PACKAGE_NAME": "com.rossmartin.dropbox"
         },
@@ -73,9 +76,6 @@
             "PACKAGE_NAME": "com.rossmartin.dropbox"
         },
         "org.apache.cordova.file": {
-            "PACKAGE_NAME": "com.rossmartin.dropbox"
-        },
-        "com.rossmartin.DropboxSync": {
             "PACKAGE_NAME": "com.rossmartin.dropbox"
         }
     },

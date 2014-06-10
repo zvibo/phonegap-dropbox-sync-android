@@ -169,7 +169,7 @@ var app = (function() {
         // viewport hack needed for Android KitKat, maybe future versions too
         if (device.platform == 'Android' && parseFloat(device.version) >= parseFloat('4.4')) {
             var viewPortScale = 1 / window.devicePixelRatio;
-            $('meta[name="viewport"]')[0].content = 'user-scalable=no, initial-scale='+viewPortScale+', width=device-width, height=device-height';
+            document.body.style.zoom = viewPortScale;
         }
     });
 
