@@ -49,7 +49,7 @@ public class DropboxSync extends CordovaPlugin {
     
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        Log.v(TAG, "execute method starting");
+        Log.d(TAG, "execute method starting");
         mDbxAcctMgr = DbxAccountManager.getInstance(cordova.getActivity().getApplicationContext(), APP_KEY, APP_SECRET);
         if (action.equals("checkLink")) {
             checkLink(callbackContext);
@@ -110,7 +110,7 @@ public class DropboxSync extends CordovaPlugin {
     }
     
     private void checkLink(CallbackContext callbackContext) {
-        Log.v(TAG, "checkLink method executing");
+        Log.d(TAG, "checkLink method executing");
         if (mDbxAcctMgr.hasLinkedAccount()){
             callbackContext.success();
         } else {
@@ -119,7 +119,7 @@ public class DropboxSync extends CordovaPlugin {
     }
 
     private void link(CallbackContext callbackContext) {
-        Log.v(TAG, "link method executing");
+        Log.d(TAG, "link method executing");
         
         cordova.setActivityResultCallback(DropboxSync.this);
         
@@ -128,13 +128,13 @@ public class DropboxSync extends CordovaPlugin {
     }
     
     private void unlink(CallbackContext callbackContext) {
-        Log.v(TAG, "unlink method executing");
+        Log.d(TAG, "unlink method executing");
         mDbxAcctMgr.unlink();
         callbackContext.success();
     }
     
     private void listFolder(final String path, final CallbackContext callbackContext) {
-        Log.v(TAG, "listFolder method executing");
+        Log.d(TAG, "listFolder method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 DbxFileSystem dbxFs;
@@ -161,7 +161,7 @@ public class DropboxSync extends CordovaPlugin {
     }
     
     private void addObserver(final String path, final CallbackContext callbackContext) {
-        Log.v(TAG, "addObserver method executing");
+        Log.d(TAG, "addObserver method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 DbxFileSystem dbxFs;
@@ -201,7 +201,7 @@ public class DropboxSync extends CordovaPlugin {
     }
     
     private void getImageBase64String(final String path, final CallbackContext callbackContext) {
-        Log.v(TAG, "getImageBase64String method executing");
+        Log.d(TAG, "getImageBase64String method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 DbxFileSystem dbxFs;
@@ -238,7 +238,7 @@ public class DropboxSync extends CordovaPlugin {
     }
     
     private void readString(final String path, final CallbackContext callbackContext) {
-        Log.v(TAG, "readString method executing");
+        Log.d(TAG, "readString method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 DbxFileSystem dbxFs;
@@ -265,7 +265,7 @@ public class DropboxSync extends CordovaPlugin {
     }
     
     private void uploadFile(final String localPath, final String dropboxPath, final CallbackContext callbackContext) {
-        Log.v(TAG, "uploadFile method executing");
+        Log.d(TAG, "uploadFile method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 DbxFileSystem dbxFs;
@@ -273,7 +273,7 @@ public class DropboxSync extends CordovaPlugin {
                 try {
                     dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     File uploadFile = resolveLocalFileSystemURI(localPath);
-                    Log.v(TAG, "dropboxPath + uploadFile.getName() -> " + dropboxPath + uploadFile.getName());
+                    Log.d(TAG, "dropboxPath + uploadFile.getName() -> " + dropboxPath + uploadFile.getName());
                     DbxPath filePath = new DbxPath(dropboxPath + uploadFile.getName());
                     DbxFile dbxFile;
                     if (dbxFs.exists(filePath)){
@@ -294,7 +294,7 @@ public class DropboxSync extends CordovaPlugin {
     }
     
     private void uploadFolder(final String localPath, final String dropboxPath, final boolean doRecursive, final CallbackContext callbackContext) {
-        Log.v(TAG, "uploadFolder method executing");
+        Log.d(TAG, "uploadFolder method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 DbxFileSystem dbxFs;
@@ -304,18 +304,18 @@ public class DropboxSync extends CordovaPlugin {
                     dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
                     File uploadPath = resolveLocalFileSystemURI(localPath);
                     directorySearch(uploadPath, localFileList, doRecursive);
-                    Log.v(TAG, "uploadFolder after directorySearch method call, localFileList -> " + localFileList + " \r\n\r\nRecursion: " + doRecursive);
+                    Log.d(TAG, "uploadFolder after directorySearch method call, localFileList -> " + localFileList + " \r\n\r\nRecursion: " + doRecursive);
                     if (localFileList.size() > 0) {
                         for (File file : localFileList) {
                             DbxFile dbxFile;
                             String parentName = uploadPath.getName();
                             int needle = file.getPath().indexOf(parentName);
                             String fileUploadName = file.getPath().substring(needle);
-                            Log.v(TAG, "fileUploadName -> " + fileUploadName);
+                            Log.d(TAG, "fileUploadName -> " + fileUploadName);
                             if (file.isDirectory()) {
                                 DbxPath filePath = new DbxPath(dropboxPath + fileUploadName);
                                 if (!dbxFs.exists(filePath)) {
-                                    Log.v(TAG, "Creating new directory in Dropbox, directory name -> " + fileUploadName);
+                                    Log.d(TAG, "Creating new directory in Dropbox, directory name -> " + fileUploadName);
                                     dbxFs.createFolder(filePath);
                                 }
                             } else {
@@ -334,7 +334,7 @@ public class DropboxSync extends CordovaPlugin {
                         if (uploadPath.isDirectory()) {
                             DbxPath filePath = new DbxPath(dropboxPath + uploadPath.getName());
                             if (!dbxFs.exists(filePath)) {
-                                Log.v(TAG, "Creating new directory in Dropbox, directory name -> " + uploadPath.getName());
+                                Log.d(TAG, "Creating new directory in Dropbox, directory name -> " + uploadPath.getName());
                                 dbxFs.createFolder(filePath);
                             }
                         } 
@@ -349,7 +349,7 @@ public class DropboxSync extends CordovaPlugin {
     }
     
     private void deleteFile(final String dropboxPath, final CallbackContext callbackContext) {
-        Log.v(TAG, "deleteFile method executing");
+        Log.d(TAG, "deleteFile method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 try {
@@ -368,7 +368,7 @@ public class DropboxSync extends CordovaPlugin {
     }
     
     private void createFolder(final String dropboxPath, final CallbackContext callbackContext) {
-        Log.v(TAG, "createFolder method executing");
+        Log.d(TAG, "createFolder method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 try {
@@ -387,7 +387,7 @@ public class DropboxSync extends CordovaPlugin {
     }
     
     private void openFile(final String path, final CallbackContext callbackContext) {
-        Log.v(TAG, "openFile method executing");
+        Log.d(TAG, "openFile method executing");
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
                 try {
@@ -397,12 +397,12 @@ public class DropboxSync extends CordovaPlugin {
                     
                     int fileNameNeedle = path.lastIndexOf("/");
                     String fileName = path.substring(fileNameNeedle);
-                    Log.v(TAG, "fileName: " + fileName);
+                    Log.d(TAG, "fileName: " + fileName);
                     
                     File cacheFolder = cordova.getActivity().getApplicationContext().getExternalCacheDir();
                     
                     File tempFile = new File(cacheFolder + "/" + fileName);
-                    Log.v(TAG, "tempFile.getPath(): " + tempFile.getPath());
+                    Log.d(TAG, "tempFile.getPath(): " + tempFile.getPath());
                     
                     FileInputStream inputStream = null;
                     FileOutputStream ouputStream = new FileOutputStream(tempFile);
@@ -480,12 +480,12 @@ public class DropboxSync extends CordovaPlugin {
             for (File file : files) {
                 localFileList.add(file);
                 if (file.isDirectory()) {
-                    Log.v(TAG, "directory:" + file.getCanonicalPath());
+                    Log.d(TAG, "directory:" + file.getCanonicalPath());
                     if (recursive) {
                         directorySearch(file, localFileList, true);
                     }
                 } else {
-                    Log.v(TAG, "file:" + file.getCanonicalPath());
+                    Log.d(TAG, "file:" + file.getCanonicalPath());
                 }
             }
         } catch (IOException e) {
@@ -560,14 +560,14 @@ public class DropboxSync extends CordovaPlugin {
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.v(TAG, "onActivityResult, requestCode: " + requestCode);
+        Log.d(TAG, "onActivityResult, requestCode: " + requestCode);
         if (requestCode == REQUEST_LINK_TO_DBX) {
             if (resultCode == Activity.RESULT_OK) {
                 // ... You can now start using Dropbox Sync API.
                 super.webView.sendJavascript("dropbox_linked();");
             } else {
                 // ... Link failed or was cancelled by the user.
-                Log.v(TAG, "Dropbox link failed or was cancelled by the user.");
+                Log.d(TAG, "Dropbox link failed or was cancelled by the user.");
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
