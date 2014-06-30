@@ -46,6 +46,10 @@ DropboxSync.prototype.readString = function(dropboxFilePath, successCB, failCB) 
     exec(successCB, failCB, pluginName, 'readString', [dropboxFilePath]);
 };
 
+DropboxSync.prototype.writeString = function(dropboxFilePath, stringToWrite, successCB, failCB) {
+    exec(successCB, failCB, pluginName, 'readString', [dropboxFilePath, stringToWrite]);
+}
+
 DropboxSync.prototype.uploadFile = function(options, successCB, failCB) {
     if (!options.filePath) {
         alert('Specify local file path for upload.');

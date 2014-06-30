@@ -76,6 +76,11 @@ public class DropboxSync extends CordovaPlugin {
             String path = args.getString(0);
             readString(path, callbackContext);
             return true;
+        } else if (action.equals("writeString")) {
+            String path = args.getString(0);
+            String data = args.getString(1);
+            writeString(path, data, callbackContext);
+
         } else if (action.equals("uploadFile")) {
             String localPath = args.getString(0);
             String dropboxPath = args.getString(1);
@@ -250,6 +255,39 @@ public class DropboxSync extends CordovaPlugin {
                     try {
                         String contents = file.readString();
                         callbackContext.success(contents);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        callbackContext.error(e.getMessage());
+                    } finally {
+                        file.close();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    callbackContext.error(e.getMessage());
+                }
+            }
+        });
+    }
+ 
+    private void writeString(final String path, final String data, final CallbackContext callbackContext) {
+        Log.d(TAG, "writeString method executing");
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                DbxFileSystem dbxFs;
+                
+                try {
+                    dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+                    DbxPath filePath = new DbxPath(path);
+                    DbxFile file;
+                    if (dbxFs.exists(filePath)){
+                        file = dbxFs.open(filePath);
+                    } else {
+                        file = dbxFs.create(filePath);
+                    }
+                    try {
+                        file.writeString(data);
+                        dbxFs.syncNowAndWait();
+                        callbackContext.success();
                     } catch (IOException e) {
                         e.printStackTrace();
                         callbackContext.error(e.getMessage());
